@@ -1,9 +1,9 @@
 # fbx parser animater
 
 <img src="http://continue-jump.com/upload_image/20170916-173228289b6c6f.png" alt="FBX" title="FBX">
-<button style="background:red;color:white;">
+<a bgcolor="red" color="white">
 gitter
-</button>
+</a>
 
 fbxファイルをjavascriptで読み込み、アニメーションさせるためのjavascriptクラスを作ります。
 
