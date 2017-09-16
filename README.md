@@ -1,0 +1,7 @@
+# fbx parser animater
+
+fbxファイルをjavascriptで読み込み、アニメーションさせるためのjavascriptクラスを作ります。
+three.jsにあるfbxのloaderでは、私の持っているCGツールのCinema4Dで作ったfbxファイルをアニメーションさせません。
+ということで自前でfbxのloaderとanimaterを作ることにします。
+
+描画はthree.jsか、WebGLで行います。
