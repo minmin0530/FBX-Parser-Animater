@@ -5,10 +5,10 @@
 <img src="http://continue-jump.com/gitter1.png" alt="gitter" title="gitter">
 </a>
 
-fbxファイルをjavascriptで読み込み、アニメーションさせるためのjavascriptクラスを作ります。
+fbxファイルを読み込み、アニメーションさせるためのjavascriptクラスを作ります。
 
-three.jsにあるfbxのloaderでは、私の持っているCGツールのCinema4Dで作ったfbxファイルをアニメーションさせません。
+three.jsにあるfbxのloaderでは、アニメーション出来ないfbxファイルがあります。
 
-ということで自前でfbxのloaderとanimaterを作ることにします。
+ということで自前でfbxのparserとanimaterを作ることにします。
 
 描画はthree.jsか、WebGLで行います。
