@@ -1,6 +1,6 @@
 # fbx parser animater
 
-<img src="http://continue-jump.com/upload_image/20170916-173228289b6c6f.png" alt="FBX" title="FBX">
+<img src="http://continue-jump.com/FPA.png" alt="FBX" title="FBX">
 <a href="https://gitter.im/FBX-Parser-Animater/Lobby?source=orgpage">
 <img src="http://continue-jump.com/gitter1.png" alt="gitter" title="gitter">
 </a>
