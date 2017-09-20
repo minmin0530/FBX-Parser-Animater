@@ -35,7 +35,7 @@ xhr.onreadystatechange = function() {
                 var fbx = new FBX_Parser(data);
                 fbx.parseFBX();
                 var main = new Main();
-                main.draw();
+                main.draw(fbx.getVertx(), fbx.getIndex());
                 
             } else {
                 console.log( 'Failed. HttpStatus: '+xhr.statusText );
@@ -53,6 +53,6 @@ window.onload = function() {
   xhr.abort();
 }
     </script>
-    <canvas id="world" width="600" height="600"></canvas>
+    <canvas id="world" width="600" height="600"></canvas><br>
   </body>
 </html>

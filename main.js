@@ -1,5 +1,5 @@
 class Main {
-  draw() {
+  draw(vertex, index) {
     var arg = new Object;
     var pair = location.search.substring(1).split('&');
     for(var i = 0; pair[i] ; i++) {
@@ -21,35 +21,33 @@ class Main {
     var texture = glBoostContext.createTexture('texture.png');
     material.setTexture(texture);
 
-    var indices = [
-      0, 1, 3, 2
-    ];
-
-    var positions = [
-      new GLBoost.Vector3(-0.5, -0.5, 0.0),
-      new GLBoost.Vector3(0.5, -0.5, 0.0),
-      [0.5,  0.5, 0.0], // GLBoost can accept arrays as vector values other than instances of vector class.
-      [-0.5, 0.5, 0.0]  // GLBoost converts the arrays to instances of vector class.
-    ];
-    var texcoords = [
-      new GLBoost.Vector2(0.0, 1.0),
-      new GLBoost.Vector2(1.0, 1.0),
-      [1.0, 0.0],  // GLBoost can accept arrays as vector values other than instances of vector class.
-      [0.0, 0.0]   // GLBoost converts the arrays to instances of vector class.
-    ];
-
-    var geometry = glBoostContext.createGeometry();
-    geometry.setVerticesData({
-      position: positions,
-      texcoord: texcoords
-    }, [indices], GLBoost.TRIANGLE_STRIP, GLBoost.DYNAMIC_DRAW);
-
-    var mesh = glBoostContext.createMesh(geometry, material);
-    scene.addChild(mesh);
-
+    for (var v = 0; v < index.length; ++v) {
+      var indices = index[v];
+      var positions = vertex;
+      var texcoords = [
+        new GLBoost.Vector2(0.0, 1.0),
+        new GLBoost.Vector2(1.0, 1.0),
+        [1.0, 0.0],  // GLBoost can accept arrays as vector values other than instances of vector class.
+        [0.0, 0.0],   // GLBoost converts the arrays to instances of vector class.
+        
+        [1.0, 0.0],
+        [0.0, 0.0],
+        [1.0, 0.0],
+        [0.0, 0.0]
+      ];
+  
+      var geometry = glBoostContext.createGeometry();
+      geometry.setVerticesData({
+        position: positions,
+        texcoord: texcoords
+      }, [indices], GLBoost.TRIANGLE_STRIP, GLBoost.DYNAMIC_DRAW);
+  
+      var mesh = glBoostContext.createMesh(geometry, material);
+      scene.addChild(mesh);
+    }
     var camera = glBoostContext.createPerspectiveCamera(
         {
-          eye: new GLBoost.Vector3(0.0, 0.0, 5.0),
+          eye: new GLBoost.Vector3(0.0, 500.0, 500.0),
           center: new GLBoost.Vector3(0.0, 0.0, 0.0),
           up: new GLBoost.Vector3(0.0, 1.0, 0.0)
         },
@@ -57,7 +55,7 @@ class Main {
           fovy: 45.0,
           aspect: 1.0,
           zNear: 0.1,
-          zFar: 300.0
+          zFar: 1000.0
         }
     );
     scene.addChild( camera );
@@ -66,9 +64,14 @@ class Main {
     expression.renderPasses[0].scene = scene;
     expression.prepareToRender();
 
+    var angle = 0;
     var render = function(){
       renderer.clearCanvas();
       renderer.draw(expression);
+
+      var rotateMatrix = GLBoost.Matrix33.rotateY(-1.0);
+      var rotatedVector = rotateMatrix.multiplyVector(camera.eye);
+      camera.eye = rotatedVector;
 
       var delta = 0.05;
       texcoords[0].x += delta;
