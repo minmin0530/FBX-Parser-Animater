@@ -2,7 +2,9 @@
   <head>
     <meta charset="utf-8">
     <title>作成</title>
-    <script src="FBX_Parser.js" type="text/javascript"></script>
+    <script src="main.js"></script>
+    <script src="glboost.js"></script>
+    <script src="FBX_Parser.js"></script>
   </head>
   <body>
     <script>
@@ -32,6 +34,8 @@ xhr.onreadystatechange = function() {
                 
                 var fbx = new FBX_Parser(data);
                 fbx.parseFBX();
+                var main = new Main();
+                main.draw();
                 
             } else {
                 console.log( 'Failed. HttpStatus: '+xhr.statusText );
@@ -49,5 +53,6 @@ window.onload = function() {
   xhr.abort();
 }
     </script>
+    <canvas id="world" width="600" height="600"></canvas>
   </body>
 </html>
