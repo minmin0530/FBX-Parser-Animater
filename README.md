@@ -11,7 +11,7 @@ three.jsにあるfbxのloaderでは、アニメーション出来ないfbxファ
 
 ということで自前でfbxのparserとanimaterを作ることにします。
 
-描画はthree.jsか、WebGLで行います。
+描画はjavascriptの3D国産ライブラリのGLBoostを使っています。
 
 使い方：
 
