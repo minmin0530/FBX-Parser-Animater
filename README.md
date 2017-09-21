@@ -15,13 +15,17 @@ three.jsにあるfbxのloaderでは、アニメーション出来ないfbxファ
 
 使い方：
 
-clone
+### clone
+```
 $git clone https://github.com/minmin0530/FBX-Parser-Animater.git
 $cd FBX-Parser-Animater
-
-setup
+```
+### setup
+```
 $npm install --save-dev gulp
 $npm install --save-dev browser-sync 
-
-browser
+```
+### browser
+```
 $gulp
+```
