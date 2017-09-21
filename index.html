@@ -8,50 +8,32 @@
   </head>
   <body>
     <script>
-
-var xhr = new XMLHttpRequest();
-
-// ハンドラの登録.
-xhr.onreadystatechange = function() {
-    switch ( xhr.readyState ) {
-        case 0:
-            // 未初期化状態.
-            console.log( 'uninitialized!' );
-            break;
-        case 1: // データ送信中.
-            console.log( 'loading...' );
-            break;
-        case 2: // 応答待ち.
-            console.log( 'loaded.' );
-            break;
-        case 3: // データ受信中.
-            console.log( 'interactive... '+xhr.responseText.length+' bytes.' );
-            break;
-        case 4: // データ受信完了.
-            if( xhr.status == 200 || xhr.status == 304 ) {
-                var data = xhr.responseText; // responseXML もあり
-                console.log( 'COMPLETE! :' );
-                
-                var fbx = new FBX_Parser(data);
-                fbx.parseFBX();
-                var main = new Main();
-                main.draw(fbx.getVertx(), fbx.getIndexTriangle(), fbx.getIndexQuad());
-                
+      function ajax(url) {
+        return new Promise(function (resolve, reject) {
+          var xhr = new XMLHttpRequest;
+          xhr.open('GET', url);
+          xhr.onload = function () {
+            if (xhr.status == 200) {
+              resolve(xhr.response); // 成功時
             } else {
-                console.log( 'Failed. HttpStatus: '+xhr.statusText );
-            }
-            break;
-    }
-};
+              reject(new Error(xhr.statusText));  // 404エラーなど
+            } 
+          }
+          xhr.onerror = reject; // urlに問題がある場合など
+          xhr.send();
+        })
+      }
+
+      function onFulfilled(response) {
+        var fbx = new FBX_Parser(response);
+        fbx.parseFBX();
+        var main = new Main();
+        main.draw(fbx.getVertx(), fbx.getIndexTriangle(), fbx.getIndexQuad());
       
+      }
+      function onRejected(error)     { elem.textContent = error    }
       
-window.onload = function() {
-  xhr.open( 'POST', './head.fbx', false );
-  // POST 送信の場合は Content-Type は固定.
-  xhr.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
-  xhr.send( null );
-  xhr.abort();
-}
+      ajax('./head.fbx').then(onFulfilled, onRejected);
     </script>
     <canvas id="world" width="600" height="600"></canvas><br>
   </body>

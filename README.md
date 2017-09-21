@@ -12,3 +12,16 @@ three.jsにあるfbxのloaderでは、アニメーション出来ないfbxファ
 ということで自前でfbxのparserとanimaterを作ることにします。
 
 描画はthree.jsか、WebGLで行います。
+
+使い方：
+
+clone
+$git clone https://github.com/minmin0530/FBX-Parser-Animater.git
+$cd FBX-Parser-Animater
+
+setup
+$npm install --save-dev gulp
+$npm install --save-dev browser-sync 
+
+browser
+$gulp
