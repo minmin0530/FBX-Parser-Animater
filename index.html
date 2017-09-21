@@ -35,7 +35,7 @@ xhr.onreadystatechange = function() {
                 var fbx = new FBX_Parser(data);
                 fbx.parseFBX();
                 var main = new Main();
-                main.draw(fbx.getVertx(), fbx.getIndex());
+                main.draw(fbx.getVertx(), fbx.getIndexTriangle(), fbx.getIndexQuad());
                 
             } else {
                 console.log( 'Failed. HttpStatus: '+xhr.statusText );
@@ -46,7 +46,7 @@ xhr.onreadystatechange = function() {
       
       
 window.onload = function() {
-  xhr.open( 'POST', './animation.fbx', false );
+  xhr.open( 'POST', './head.fbx', false );
   // POST 送信の場合は Content-Type は固定.
   xhr.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
   xhr.send( null );

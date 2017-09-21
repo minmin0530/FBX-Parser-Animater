@@ -1,5 +1,5 @@
 class Main {
-  draw(vertex, index) {
+  draw(vertex, indexTriangle, indexQuad) {
     var arg = new Object;
     var pair = location.search.substring(1).split('&');
     for(var i = 0; pair[i] ; i++) {
@@ -20,35 +20,76 @@ class Main {
     var material = glBoostContext.createClassicMaterial();
     var texture = glBoostContext.createTexture('texture.png');
     material.setTexture(texture);
+    var material2 = glBoostContext.createClassicMaterial();
+    var texture2 = glBoostContext.createTexture('texture.png');
+    material2.setTexture(texture2);
+    
+    //三角ポリゴン描画
+    for (var u = 0; u < indexTriangle.length; ++u) {
+      var indices = [];
+      for (var v = 0; v < indexTriangle[u].length; ++v) {
+        for (var w = 0; w < 3; ++w) {
+          indices.push(indexTriangle[u][v][w]);
+        }
+      }
 
-    for (var v = 0; v < index.length; ++v) {
-      var indices = index[v];
-      var positions = vertex;
-      var texcoords = [
-        new GLBoost.Vector2(0.0, 1.0),
-        new GLBoost.Vector2(1.0, 1.0),
-        [1.0, 0.0],  // GLBoost can accept arrays as vector values other than instances of vector class.
-        [0.0, 0.0],   // GLBoost converts the arrays to instances of vector class.
-        
-        [1.0, 0.0],
-        [0.0, 0.0],
-        [1.0, 0.0],
-        [0.0, 0.0]
-      ];
+      var positions = vertex[u];
+      var texcoords = [];
+      for (var w = 0; w < 100; ++w) {
+        var texcoord1 = [];
+        texcoord1.push(1.0);
+        texcoord1.push(0.0);
+        var texcoord2 = [];
+        texcoord2.push(1.0);
+        texcoord2.push(0.0);
+        texcoords.push(texcoord1);
+        texcoords.push(texcoord2);
+      }
+      var geometry = glBoostContext.createGeometry();
+      geometry.setVerticesData({
+        position: positions,
+        texcoord: texcoords
+      }, [indices], GLBoost.TRIANGLES, GLBoost.DYNAMIC_DRAW);
   
+      var mesh = glBoostContext.createMesh(geometry, material);
+      scene.addChild(mesh);
+    }
+    
+    //四角ポリゴン描画
+    for (var u = 0; u < indexQuad.length; ++u) {
+      var indices = [];
+      for (var v = 0; v < indexQuad[u].length; ++v) {
+        for (var w = 0; w < 3; ++w) {
+          indices.push(indexQuad[u][v][w]);
+        }
+      }
+
+      var positions = vertex[u];
+      var texcoords = [];
+      for (var w = 0; w < 100; ++w) {
+        var texcoord1 = [];
+        texcoord1.push(1.0);
+        texcoord1.push(0.0);
+        var texcoord2 = [];
+        texcoord2.push(1.0);
+        texcoord2.push(0.0);
+        texcoords.push(texcoord1);
+        texcoords.push(texcoord2);
+      }
       var geometry = glBoostContext.createGeometry();
       geometry.setVerticesData({
         position: positions,
         texcoord: texcoords
       }, [indices], GLBoost.TRIANGLE_STRIP, GLBoost.DYNAMIC_DRAW);
   
-      var mesh = glBoostContext.createMesh(geometry, material);
+      var mesh = glBoostContext.createMesh(geometry, material2);
       scene.addChild(mesh);
     }
+
     var camera = glBoostContext.createPerspectiveCamera(
         {
-          eye: new GLBoost.Vector3(0.0, 500.0, 500.0),
-          center: new GLBoost.Vector3(0.0, 0.0, 0.0),
+          eye: new GLBoost.Vector3(0.0, 0.0, 500.0),
+          center: new GLBoost.Vector3(0.0, -100.0, 0.0),
           up: new GLBoost.Vector3(0.0, 1.0, 0.0)
         },
         {
