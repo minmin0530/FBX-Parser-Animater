@@ -2,9 +2,9 @@
   <head>
     <meta charset="utf-8">
     <title>作成</title>
-    <script src="main.js"></script>
-    <script src="glboost.js"></script>
-    <script src="FBX_Parser.js"></script>
+    <script src="src/main.js"></script>
+    <script src="lib/glboost.js"></script>
+    <script src="src/FBX_Parser.js"></script>
   </head>
   <body>
     <script>
@@ -33,7 +33,7 @@
       }
       function onRejected(error)     { elem.textContent = error    }
       
-      ajax('./head.fbx').then(onFulfilled, onRejected);
+      ajax('resource/head.fbx').then(onFulfilled, onRejected);
     </script>
     <canvas id="world" width="600" height="600"></canvas><br>
   </body>

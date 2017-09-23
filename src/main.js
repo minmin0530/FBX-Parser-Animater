@@ -18,10 +18,10 @@ class Main {
     var scene = glBoostContext.createScene();
 
     var material = glBoostContext.createClassicMaterial();
-    var texture = glBoostContext.createTexture('texture.png');
+    var texture = glBoostContext.createTexture('../resource/texture.png');
     material.setTexture(texture);
     var material2 = glBoostContext.createClassicMaterial();
-    var texture2 = glBoostContext.createTexture('texture.png');
+    var texture2 = glBoostContext.createTexture('../resource/texture.png');
     material2.setTexture(texture2);
     
     //三角ポリゴン描画
