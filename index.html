@@ -13,7 +13,7 @@
         var fbx = new FBX_Parser(response);
         fbx.parseFBX();
         var main = new Main();
-        main.draw(fbx.getVertx(), fbx.getIndexTriangle(), fbx.getIndexQuad());
+        main.draw(fbx.getVertx(), fbx.getIndexTriangle());
       
       }
       function onRejected(error)     { elem.textContent = error    }

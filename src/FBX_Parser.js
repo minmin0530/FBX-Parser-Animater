@@ -11,7 +11,6 @@ class FBX_Parser {
     //#####
     this.vertexContainer = [];
     this.indexContainerTriangle = [];
-    this.indexContainerQuad = [];
     for (var u = 0; this.fbx.indexOf("Vertices", end) != -1; ++u) {
       end = this.fbx.indexOf("Vertices", end);
       begin = this.fbx.indexOf("*", end) + 1;
@@ -77,6 +76,7 @@ class FBX_Parser {
           adjustIndex.push(index[index.length - 1]);
           adjustIndex.push(index[index.length - 2]);
           this.index.push(adjustIndex);
+//          this.index.push(index);
           index = [];
           newLine = false;
         } else {
@@ -91,16 +91,23 @@ class FBX_Parser {
       }//for(var v = 0)
       
       var triangle = [];
-      var quad = [];
       for (var v = 0; v < this.index.length; ++v) {
         if (this.index[v].length == 3) {
           triangle.push(this.index[v]);
         } else if (this.index[v].length == 4) {
-          quad.push(this.index[v]);
+          var temp = [];
+          var temp2 = [];
+          temp.push(this.index[v][0]);
+          temp.push(this.index[v][1]);
+          temp.push(this.index[v][2]);
+          triangle.push(temp);
+          temp2.push(this.index[v][1]);
+          temp2.push(this.index[v][2]);
+          temp2.push(this.index[v][3]);
+          triangle.push(temp2);
         }
       }
       this.indexContainerTriangle.push(triangle);
-      this.indexContainerQuad.push(quad);
     }//for(var u = 0)
     
   }
@@ -109,9 +116,6 @@ class FBX_Parser {
   }
   getIndexTriangle() {
     return this.indexContainerTriangle;
-  }
-  getIndexQuad() {
-    return this.indexContainerQuad;
   }
   showFBX() {
     console.log(this.fbx);
