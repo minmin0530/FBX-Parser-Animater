@@ -8,6 +8,7 @@ class FBX_Parser {
 
     var connectionModel = [];
     var connectionGeometry = [];
+    var connectionMaterial = [];
     //####
     // Definitions
     //####
@@ -101,41 +102,33 @@ class FBX_Parser {
       end = this.fbx.indexOf("\n", begin);
       geometry.push(this.fbx.substring(begin, end));
 
+
+      while (
+          (this.fbx.indexOf(";Material", end) != -1 &&
+           this.fbx.indexOf(";Material", end) < this.fbx.indexOf(";Geometry", end) ) ||
+          (this.fbx.indexOf(";Geometry", end) == -1 && this.fbx.indexOf(";Material", end) != -1)
+      ) {
+        var cMaterial = [];
+        begin = this.fbx.indexOf(";Material", end) + 1;
+        end = this.fbx.indexOf(",", begin);
+        cMaterial.push(this.fbx.substring(begin, end));
+    
+        begin = this.fbx.indexOf("Model", end);
+        end = this.fbx.indexOf("\n", begin);
+        cMaterial.push(this.fbx.substring(begin, end));
+    
+        begin = this.fbx.indexOf(",", end) + 1;
+        end = this.fbx.indexOf(",", begin);
+        cMaterial.push(this.fbx.substring(begin, end));
+    
+        begin = end + 1;
+        end = this.fbx.indexOf("\n", begin);
+        cMaterial.push(this.fbx.substring(begin, end));
+        geometry.push(cMaterial);
+      }
       connectionGeometry.push(geometry);
 
-
-//      begin = this.fbx.indexOf(";Material", end) + 1;
-//      end = this.fbx.indexOf(",", begin);
-//      var childName = this.fbx.substring(begin, end);
-//      document.body.innerHTML += this.fbx.substring(begin, end) + "<br>";
-//  
-//      begin = this.fbx.indexOf("Model", end);
-//      end = this.fbx.indexOf("\n", begin);
-//      var parentName = this.fbx.substring(begin, end);
-//      document.body.innerHTML += this.fbx.substring(begin, end) + "<br>";
-//  
-//      begin = this.fbx.indexOf(",", end) + 1;
-//      end = this.fbx.indexOf(",", begin);
-//      var childId = this.fbx.substring(begin, end);
-//      document.body.innerHTML += this.fbx.substring(begin, end) + "<br>";
-//  
-//      begin = end + 1;
-//      end = this.fbx.indexOf("\n", begin);
-//      var parentId = this.fbx.substring(begin, end);
-//      document.body.innerHTML += this.fbx.substring(begin, end) + "<br>";
-        
     }
-//    document.body.innerHTML +=connectionModel[78][0] + "<br>";
-//    document.body.innerHTML +=connectionGeometry[0][3] + "<br>";
-//
-//    for (var v = 0; v < connectionModel.length; ++v) {
-//    for (var w = 0; w < connectionGeometry.length; ++w) {
-//        if (connectionModel[v][2] == connectionGeometry[w][3]) {
-//          var geomId = connectionGeometry[w][2];
-//            
-//        }
-//    }
-//    }
 
     //#####
     // Objects
@@ -328,9 +321,40 @@ class FBX_Parser {
     
       modelContainer.push(modelArray);
     }
+    //#####
+    // Material
+    //#####
+    var materialContainer = [];
+    for (var v = 0; v < materialNumber; ++v) {
+      var materialArray = [];
+      begin = this.fbx.indexOf("Material:", end) + 10;
+      end = this.fbx.indexOf(",", begin);
+      materialArray.push(this.fbx.substring(begin, end));
+
+      begin = this.fbx.indexOf("Material::", end) + 10;
+      end = this.fbx.indexOf(",", begin) - 1;
+      materialArray.push(this.fbx.substring(begin, end));
+
+      begin = this.fbx.indexOf("DiffuseColor", end);
+      begin = this.fbx.indexOf("A", begin) + 3;
+      end = this.fbx.indexOf(",", begin);
+      materialArray.push(this.fbx.substring(begin, end));
+
+      begin = end + 1;
+      end = this.fbx.indexOf(",", begin);
+      materialArray.push(this.fbx.substring(begin, end));
+ 
+      begin = end + 1;
+      end = this.fbx.indexOf("\n", begin);
+      materialArray.push(this.fbx.substring(begin, end));
+      
+      materialContainer.push(materialArray);
+    }
+      
     this.vertexContainer1 = [];
     this.indexContainer1 = [];
     this.modelContainer1 = [];
+    this.materialContainer1 = [];
     for (var v = 0; v < connectionGeometry.length; ++v) {
       for (var w = 0; w < geometryIdContainer.length; ++w) {
         if (connectionGeometry[v][2] == geometryIdContainer[w]) {
@@ -345,16 +369,16 @@ class FBX_Parser {
           break;
         }
       }
+      for (var w = 0; w < materialContainer.length; ++w) {
+        if (connectionGeometry[v][4][2] == materialContainer[w][0]) {
+          this.materialContainer1.push(materialContainer[w]);
+          break;
+        }
+      }
     }
-    //#####
-    // Material
-    //#####  
-    begin = this.fbx.indexOf("Material:", end) + 10;
-    end = this.fbx.indexOf(",", begin);
-    var MaterialId = this.fbx.substring(begin, end);
-document.body.innerHTML += "MaterialId:" +MaterialId+ "<br>";
       
       
+/*      
     //#####
     // 頂点
     //#####
@@ -460,7 +484,7 @@ document.body.innerHTML += "MaterialId:" +MaterialId+ "<br>";
       }
       this.indexContainerTriangle.push(triangle);
     }//for(var u = 0)
-    
+    */
   }
   getVertx() {
     return this.vertexContainer1;
@@ -472,6 +496,9 @@ document.body.innerHTML += "MaterialId:" +MaterialId+ "<br>";
   }
   getModelSRT() {
     return this.modelContainer1;
+  }
+  getMaterial() {
+    return this.materialContainer1;
   }
   showFBX() {
     console.log(this.fbx);
