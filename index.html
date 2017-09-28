@@ -13,12 +13,12 @@
         var fbx = new FBX_Parser(response);
         fbx.parseFBX();
         var main = new Main();
-        main.draw(fbx.getVertx(), fbx.getIndexTriangle());
+        main.draw(fbx.getVertx(), fbx.getIndexTriangle(), fbx.getModelSRT());
       
       }
       function onRejected(error)     { elem.textContent = error    }
       
-      ajax('resource/cube.fbx').then(onFulfilled, onRejected);
+      ajax('resource/head.fbx').then(onFulfilled, onRejected);
     </script>
     <canvas id="world" width="600" height="600"></canvas><br>
   </body>

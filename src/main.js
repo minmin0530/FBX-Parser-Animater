@@ -1,5 +1,5 @@
 class Main {
-  draw(vertex, indexTriangle) {
+  draw(vertex, indexTriangle, modelSRT) {
     var arg = new Object;
     var pair = location.search.substring(1).split('&');
     for(var i = 0; pair[i] ; i++) {
@@ -23,8 +23,9 @@ class Main {
     var material2 = glBoostContext.createClassicMaterial();
     var texture2 = glBoostContext.createTexture('../resource/texture.png');
     material2.setTexture(texture2);
-    
-    //三角ポリゴン描画
+    material.baseColor = new GLBoost.Vector4(1.0, 0.0, 0.0, 1.0);
+
+      //三角ポリゴン描画
     for (var u = 0; u < indexTriangle.length; ++u) {
       var indices = [];
       for (var v = 0; v < indexTriangle[u].length; ++v) {
@@ -35,7 +36,7 @@ class Main {
 
       var positions = vertex[u];
       var texcoords = [];
-      for (var w = 0; w < 100; ++w) {
+      for (var w = 0; w < 600; ++w) {
         var texcoord1 = [];
         texcoord1.push(1.0);
         texcoord1.push(0.0);
@@ -52,6 +53,9 @@ class Main {
       }, [indices], GLBoost.TRIANGLES, GLBoost.DYNAMIC_DRAW);
   
       var mesh = glBoostContext.createMesh(geometry, material);
+      mesh.translate = new GLBoost.Vector3(modelSRT[u][2][0], modelSRT[u][2][1], modelSRT[u][2][2]);
+      mesh.rotate    = new GLBoost.Vector3(modelSRT[u][3][0], modelSRT[u][3][1], modelSRT[u][3][2]);
+      mesh.scale     = new GLBoost.Vector3(modelSRT[u][4][0], modelSRT[u][4][1], modelSRT[u][4][2]);
       scene.addChild(mesh);
     }
 
