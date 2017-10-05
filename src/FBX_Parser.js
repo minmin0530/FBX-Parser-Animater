@@ -136,6 +136,7 @@ class FBX_Parser {
     var geometryIdContainer = [];
     this.vertexContainer0 = [];
     this.indexContainerTriangle0 = [];
+    this.materialsContainer0 = [];
     begin = this.fbx.indexOf("Objects:", 0);
     for (var u = 0; u < geometryNumber; ++u) {
       begin = this.fbx.indexOf("Geometry:", begin) + 10;
@@ -196,14 +197,14 @@ class FBX_Parser {
           token = num;
           index.push(token);
           
-          var adjustIndex = [];
-          for (var w = 0; w < index.length - 2; ++w) {
-            adjustIndex.push(index[w]);
-          }
-          adjustIndex.push(index[index.length - 1]);
-          adjustIndex.push(index[index.length - 2]);
-          this.index0.push(adjustIndex);
-//           this.index0.push(index);
+//          var adjustIndex = [];
+//          for (var w = 0; w < index.length - 2; ++w) {
+//            adjustIndex.push(index[w]);
+//          }
+//          adjustIndex.push(index[index.length - 1]);
+//          adjustIndex.push(index[index.length - 2]);
+//          this.index0.push(adjustIndex);
+           this.index0.push(index);
           index = [];
           newLine = false;
         } else {
@@ -221,31 +222,35 @@ class FBX_Parser {
       for (var v = 0; v < this.index0.length; ++v) {
         if (this.index0[v].length == 3) {
           triangle0.push(this.index0[v]);
-        } else if (this.index0[v].length == 4) {
-          var temp = [];
-          var temp2 = [];
-          temp.push(this.index0[v][0]);
-          temp.push(this.index0[v][1]);
-          temp.push(this.index0[v][2]);
-          triangle0.push(temp);
-          temp2.push(this.index0[v][1]);
-          temp2.push(this.index0[v][2]);
-          temp2.push(this.index0[v][3]);
-          triangle0.push(temp2);
         }
       }      
       this.indexContainerTriangle0.push(triangle0);
-    }
-    //#####
-    // Materials
-    //#####  
-    end = this.fbx.indexOf("Materials:", end);
-    begin = this.fbx.indexOf("*", end) + 1;
-    end = this.fbx.indexOf(" ", begin);
-//    var materialNumber = this.fbx.substring(begin, end);
-//
+    
+      //#####
+      // Materials
+      //#####
+      end = this.fbx.indexOf("Materials:", end);
+      begin = this.fbx.indexOf("*", end) + 1;
+      end = this.fbx.indexOf(" ", begin);
+      var materialNumber0 = this.fbx.substring(begin, end);
 //      document.body.innerHTML += "<br>" + this.fbx.substring(begin, end) + "<br>";
+      end = this.fbx.indexOf("{", end);
+      begin = this.fbx.indexOf(":", end) + 2;
 
+      var materials = [];
+      for (var v = 0; v < materialNumber0; ++v) {
+        if (v == materialNumber0 - 1) {
+          end = this.fbx.indexOf("\n", begin);
+        } else {
+          end = this.fbx.indexOf(",", begin);
+        }
+        materials.push(this.fbx.substring(begin, end));
+        begin = end + 1;
+      }
+      this.materialsContainer0.push(materials);
+//      document.body.innerHTML += "<br>" + this.materialsContainer0 + "<br>";
+        
+    }
     //#####
     // Model
     //#####  
@@ -370,135 +375,85 @@ class FBX_Parser {
         }
       }
       for (var w = 0; w < materialContainer.length; ++w) {
-        if (connectionGeometry[v][4][2] == materialContainer[w][0]) {
-          this.materialContainer1.push(materialContainer[w]);
+        var temp = [];
+        var breakFlag = false;
+        if (connectionGeometry[v].length == 5 &&
+            connectionGeometry[v][4][2] == materialContainer[w][0]) {
+          temp.push(0);
+          temp.push(0);
+          temp.push(materialContainer[w][2]);
+          temp.push(materialContainer[w][3]);
+          temp.push(materialContainer[w][4]);
+          breakFlag = true;
+        }
+        if (connectionGeometry[v].length == 6) {
+          breakFlag = true;
+          for (var a = 0; a < materialContainer.length; ++a) {
+            if (connectionGeometry[v][4][2] == materialContainer[a][0]) {
+              temp.push(0);
+              temp.push(0);
+              temp.push(materialContainer[a][2]);
+              temp.push(materialContainer[a][3]);
+              temp.push(materialContainer[a][4]);                
+            }              
+          }
+          for (var a = 0; a < materialContainer.length; ++a) {
+            if (connectionGeometry[v][5][2] == materialContainer[a][0]) {
+              temp.push(materialContainer[a][2]);
+              temp.push(materialContainer[a][3]);
+              temp.push(materialContainer[a][4]);                
+            }              
+          }
+        }
+        if (connectionGeometry[v].length == 7) {
+          breakFlag = true;
+          for (var a = 0; a < materialContainer.length; ++a) {
+            if (connectionGeometry[v][4][2] == materialContainer[a][0]) {
+              temp.push(0);
+              temp.push(0);
+              temp.push(materialContainer[a][2]);
+              temp.push(materialContainer[a][3]);
+              temp.push(materialContainer[a][4]);                
+            }              
+          }
+          for (var a = 0; a < materialContainer.length; ++a) {
+            if (connectionGeometry[v][5][2] == materialContainer[a][0]) {
+              temp.push(materialContainer[a][2]);
+              temp.push(materialContainer[a][3]);
+              temp.push(materialContainer[a][4]);                
+            }              
+          }
+          for (var a = 0; a < materialContainer.length; ++a) {
+            if (connectionGeometry[v][6][2] == materialContainer[a][0]) {
+              temp.push(materialContainer[a][2]);
+              temp.push(materialContainer[a][3]);
+              temp.push(materialContainer[a][4]);                
+            }              
+          }
+        }  
+
+        if (breakFlag) {
+          this.materialContainer1.push(temp);
           break;
         }
+          
       }
     }
-      
-      
-/*      
-    //#####
-    // 頂点
-    //#####
-    begin = 0;
-    end = 0;
-    this.vertexContainer = [];
-    this.indexContainerTriangle = [];
-    for (var u = 0; this.fbx.indexOf("Vertices", end) != -1; ++u) {
-      end = this.fbx.indexOf("Vertices", end);
-      begin = this.fbx.indexOf("*", end) + 1;
-      end = this.fbx.indexOf(" ", begin);
-
-      //バーテックスの数
-      var VertexNumber = this.fbx.substring(begin, end);
-        
-      end = this.fbx.indexOf("{", end);
-      begin = this.fbx.indexOf(":", end) + 2;
-
-      this.vertex = [];
-      for (var v = 0; v < VertexNumber / 3; ++v) {
-        var vertex = [];
-        for (var w = 0; w < 3; ++w) {
-          if (v * 3 + w == VertexNumber - 1) {
-            end = this.fbx.indexOf("\n", begin);
-          } else {
-            end = this.fbx.indexOf(",", begin);
-          }
-          var token = this.fbx.substring(begin, end);
-          vertex.push(token);      
-          if (w == 2) {
-            this.vertex.push(vertex);
-          }
-          begin = end + 1;
-        }
-      }
-      this.vertexContainer.push(this.vertex);
-      //#################
-      // 頂点のインデックス
-      //#################
-      end = this.fbx.indexOf("PolygonVertexIndex", end);
-      begin = this.fbx.indexOf("*", end) + 1;
-      end = this.fbx.indexOf(" ", begin);
-
-      //インデックスの数
-      var VertexIndexNumber = this.fbx.substring(begin, end);
-      
-      end = this.fbx.indexOf("{", end);
-      begin = this.fbx.indexOf(":", end) + 2;
-      
-      this.index = [];
-      var newLine = false;
-      var index = [];
-      for (var v = 0; v < VertexIndexNumber; ++v) {
-        if (v == VertexIndexNumber - 1) {
-          end = this.fbx.indexOf("\n", begin);
-        } else {
-          end = this.fbx.indexOf(",", begin);
-        }
-        var token = this.fbx.substring(begin, end);
-        if (newLine) {
-          var num = token.substring(1);
-          num -= 1;
-          token = num;
-          index.push(token);
-          
-          var adjustIndex = [];
-          for (var w = 0; w < index.length - 2; ++w) {
-            adjustIndex.push(index[w]);
-          }
-          adjustIndex.push(index[index.length - 1]);
-          adjustIndex.push(index[index.length - 2]);
-          this.index.push(adjustIndex);
-//          this.index.push(index);
-          index = [];
-          newLine = false;
-        } else {
-          index.push(token);
-        }
-          
-        //ポリゴンの頂点の末端の "-" を検知
-        if (this.fbx.substring(end + 1, end + 2) == "-") {
-          newLine = true;
-        }
-        begin = end + 1;
-      }//for(var v = 0)
-      
-      var triangle = [];
-      for (var v = 0; v < this.index.length; ++v) {
-        if (this.index[v].length == 3) {
-          triangle.push(this.index[v]);
-        } else if (this.index[v].length == 4) {
-          var temp = [];
-          var temp2 = [];
-          temp.push(this.index[v][0]);
-          temp.push(this.index[v][1]);
-          temp.push(this.index[v][2]);
-          triangle.push(temp);
-          temp2.push(this.index[v][1]);
-          temp2.push(this.index[v][2]);
-          temp2.push(this.index[v][3]);
-          triangle.push(temp2);
-        }
-      }
-      this.indexContainerTriangle.push(triangle);
-    }//for(var u = 0)
-    */
   }
   getVertx() {
     return this.vertexContainer1;
-//    return this.vertexContainer;
   }
   getIndexTriangle() {
     return this.indexContainer1;
-//    return this.indexContainerTriangle;
   }
   getModelSRT() {
     return this.modelContainer1;
   }
   getMaterial() {
     return this.materialContainer1;
+  }
+  getMaterials() {
+    return this.materialsContainer0;
   }
   showFBX() {
     console.log(this.fbx);

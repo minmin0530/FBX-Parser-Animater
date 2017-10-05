@@ -1,5 +1,5 @@
 class Main {
-  draw(vertex, indexTriangle, modelSRT, material) {
+  draw(vertex, indexTriangle, modelSRT, material, materials) {
     var arg = new Object;
     var pair = location.search.substring(1).split('&');
     for(var i = 0; pair[i] ; i++) {
@@ -29,31 +29,40 @@ class Main {
           indices.push(indexTriangle[u][v][w]);
         }
       }
-
       var positions = vertex[u];
-      var texcoords = [];
-      for (var w = 0; w < 600; ++w) {
-        var texcoord1 = [];
-        texcoord1.push(1.0);
-        texcoord1.push(0.0);
-        var texcoord2 = [];
-        texcoord2.push(1.0);
-        texcoord2.push(0.0);
-        texcoords.push(texcoord1);
-        texcoords.push(texcoord2);
+
+      var colors = [];
+      for (var v = 0; v < vertex[u].length; ++v) {
+        colors.push(new GLBoost.Vector4(0, 0, 0, 1.0));
+      }
+      for (var v = 0; v < indexTriangle[u].length; ++v) {
+        if ( materials[u][v] == 0) {
+          for (var w = 0; w < 3; ++w) {
+            colors[indexTriangle[u][v][w]] = new GLBoost.Vector4(material[u][2], material[u][3], material[u][4], 1.0);
+          }
+        }
+      }
+      for (var v = 0; v < indexTriangle[u].length; ++v) {
+        if ( materials[u][v] == 1) {
+          for (var w = 0; w < 3; ++w) {
+            colors[indexTriangle[u][v][w]] = new GLBoost.Vector4(material[u][5], material[u][6], material[u][7], 1.0);
+          }
+        }
+      }
+      for (var v = 0; v < indexTriangle[u].length; ++v) {
+        if ( materials[u][v] == 2) {
+          for (var w = 0; w < 3; ++w) {
+            colors[indexTriangle[u][v][w]] = new GLBoost.Vector4(material[u][8], material[u][9], material[u][10], 1.0);
+          }
+        }
       }
       var geometry = glBoostContext.createGeometry();
       geometry.setVerticesData({
         position: positions,
-        texcoord: texcoords
+        color: colors
       }, [indices], GLBoost.TRIANGLES, GLBoost.DYNAMIC_DRAW);
 
-      var material1 = glBoostContext.createClassicMaterial();
-//      var texture = glBoostContext.createTexture('../resource/texture.png');
-//      material1.setTexture(texture);
-      material1.baseColor = new GLBoost.Vector4(material[u][2], material[u][3], material[u][4], 1.0);
-
-      var mesh = glBoostContext.createMesh(geometry, material1);
+      var mesh = glBoostContext.createMesh(geometry);
       mesh.translate = new GLBoost.Vector3(modelSRT[u][2][0], modelSRT[u][2][1], modelSRT[u][2][2]);
       mesh.rotate    = new GLBoost.Vector3(modelSRT[u][3][0], modelSRT[u][3][1], modelSRT[u][3][2]);
       mesh.scale     = new GLBoost.Vector3(modelSRT[u][4][0], modelSRT[u][4][1], modelSRT[u][4][2]);
@@ -87,16 +96,6 @@ class Main {
       var rotateMatrix = GLBoost.Matrix33.rotateY(-1.0);
       var rotatedVector = rotateMatrix.multiplyVector(camera.eye);
       camera.eye = rotatedVector;
-
-      var delta = 0.05;
-      texcoords[0].x += delta;
-      texcoords[1].x += delta;
-      texcoords[2][0] += delta;  // You have to access this element using .x property, because GLBoost converted the above-specified arrays to instances of vector class.
-      texcoords[3][0] += delta;  // same here.
-
-      geometry.updateVerticesData({
-        texcoord: texcoords
-      });
 
       requestAnimationFrame(render);
     };

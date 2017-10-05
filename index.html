@@ -13,12 +13,12 @@
         var fbx = new FBX_Parser(response);
         fbx.parseFBX();
         var main = new Main();
-        main.draw(fbx.getVertx(), fbx.getIndexTriangle(), fbx.getModelSRT(), fbx.getMaterial());
+        main.draw(fbx.getVertx(), fbx.getIndexTriangle(), fbx.getModelSRT(), fbx.getMaterial(), fbx.getMaterials());
       
       }
       function onRejected(error)     { elem.textContent = error    }
       
-      ajax('resource/head.fbx').then(onFulfilled, onRejected);
+      ajax('resource/all_triangle.fbx').then(onFulfilled, onRejected);
     </script>
     <canvas id="world" width="600" height="600"></canvas><br>
   </body>
