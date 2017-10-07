@@ -1,6 +1,6 @@
 class Main {
   constructor() {
-    ajax('../resource/all_triangle.fbx').then(this.onFulfilled, this.onRejected);
+    ajax('resource/all_triangle.fbx').then(this.onFulfilled, this.onRejected);
   }
   onFulfilled(response) {
     var renderer = new Renderer();
@@ -72,7 +72,6 @@ class Renderer {
     expression.renderPasses[0].scene = scene;
     expression.prepareToRender();
 
-    var angle = 0;
     var render = function(){
       renderer.clearCanvas();
       renderer.draw(expression);
