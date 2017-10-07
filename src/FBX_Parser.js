@@ -1,6 +1,7 @@
+var thisfbx;
 class FBX_Parser {
   constructor(fbx) {
-    this.fbx = fbx;
+    thisfbx = fbx;
   }
   parseFBX() {
     var begin = 0;
@@ -12,118 +13,118 @@ class FBX_Parser {
     //####
     // Definitions
     //####
-    begin = this.fbx.indexOf("Definitions:", 0);
-    end = this.fbx.indexOf("\n", begin);
+    begin = thisfbx.indexOf("Definitions:", 0);
+    end = thisfbx.indexOf("\n", begin);
       
-    begin = this.fbx.indexOf("Model", end);
-    begin = this.fbx.indexOf("Count", begin);
-    begin = this.fbx.indexOf(" ",     begin) + 1;
-    end = this.fbx.indexOf("\n", begin);
-    var modelNumber = this.fbx.substring(begin, end);
+    begin = thisfbx.indexOf("Model", end);
+    begin = thisfbx.indexOf("Count", begin);
+    begin = thisfbx.indexOf(" ",     begin) + 1;
+    end = thisfbx.indexOf("\n", begin);
+    var modelNumber = thisfbx.substring(begin, end);
     
-    begin = this.fbx.indexOf("NodeAttribute", end);
-    begin = this.fbx.indexOf("Count", begin);
-    begin = this.fbx.indexOf(" ",     begin) + 1;
-    end = this.fbx.indexOf("\n", begin);
-    var nodeAttributeNumber = this.fbx.substring(begin, end);
+    begin = thisfbx.indexOf("NodeAttribute", end);
+    begin = thisfbx.indexOf("Count", begin);
+    begin = thisfbx.indexOf(" ",     begin) + 1;
+    end = thisfbx.indexOf("\n", begin);
+    var nodeAttributeNumber = thisfbx.substring(begin, end);
 
-    begin = this.fbx.indexOf("Geometry", end);
-    begin = this.fbx.indexOf("Count", begin);
-    begin = this.fbx.indexOf(" ",     begin) + 1;
-    end = this.fbx.indexOf("\n", begin);
-    var geometryNumber = this.fbx.substring(begin, end);
+    begin = thisfbx.indexOf("Geometry", end);
+    begin = thisfbx.indexOf("Count", begin);
+    begin = thisfbx.indexOf(" ",     begin) + 1;
+    end = thisfbx.indexOf("\n", begin);
+    var geometryNumber = thisfbx.substring(begin, end);
     
-    begin = this.fbx.indexOf("Material", end);
-    begin = this.fbx.indexOf("Count", begin);
-    begin = this.fbx.indexOf(" ",     begin) + 1;
-    end = this.fbx.indexOf("\n", begin);
-    var materialNumber = this.fbx.substring(begin, end);
+    begin = thisfbx.indexOf("Material", end);
+    begin = thisfbx.indexOf("Count", begin);
+    begin = thisfbx.indexOf(" ",     begin) + 1;
+    end = thisfbx.indexOf("\n", begin);
+    var materialNumber = thisfbx.substring(begin, end);
     //#####
     // Connections
     //#####
-    begin = this.fbx.indexOf("Connections:", 0);
-    end = this.fbx.indexOf("\n", begin);      
+    begin = thisfbx.indexOf("Connections:", 0);
+    end = thisfbx.indexOf("\n", begin);      
     
     for (var v = 0; v < modelNumber; ++v) {
       var model = [];
-      begin = this.fbx.indexOf(";Model", end) + 1;
-      end = this.fbx.indexOf(",", begin);
-      model.push(this.fbx.substring(begin, end));
+      begin = thisfbx.indexOf(";Model", end) + 1;
+      end = thisfbx.indexOf(",", begin);
+      model.push(thisfbx.substring(begin, end));
   
-      begin = this.fbx.indexOf("Model", end);
-      end = this.fbx.indexOf("\n", begin);
-      model.push(this.fbx.substring(begin, end));
+      begin = thisfbx.indexOf("Model", end);
+      end = thisfbx.indexOf("\n", begin);
+      model.push(thisfbx.substring(begin, end));
   
-      begin = this.fbx.indexOf(",", end) + 1;
-      end = this.fbx.indexOf(",", begin);
-      model.push(this.fbx.substring(begin, end));
+      begin = thisfbx.indexOf(",", end) + 1;
+      end = thisfbx.indexOf(",", begin);
+      model.push(thisfbx.substring(begin, end));
   
       begin = end + 1;
-      end = this.fbx.indexOf("\n", begin);
-      model.push(this.fbx.substring(begin, end));
+      end = thisfbx.indexOf("\n", begin);
+      model.push(thisfbx.substring(begin, end));
     
       connectionModel.push(model);
     }
 
-    begin = this.fbx.indexOf("Connections:", 0);
-    end = this.fbx.indexOf("\n", begin);
+    begin = thisfbx.indexOf("Connections:", 0);
+    end = thisfbx.indexOf("\n", begin);
     for (var v = 0; v < nodeAttributeNumber; ++v) {
-      begin = this.fbx.indexOf(";NodeAttribute", end) + 1;
-      end = this.fbx.indexOf(",", begin);
-      var childName = this.fbx.substring(begin, end);
+      begin = thisfbx.indexOf(";NodeAttribute", end) + 1;
+      end = thisfbx.indexOf(",", begin);
+      var childName = thisfbx.substring(begin, end);
   
-      begin = this.fbx.indexOf("Model", end);
-      end = this.fbx.indexOf("\n", begin);
-      var parentName = this.fbx.substring(begin, end);
+      begin = thisfbx.indexOf("Model", end);
+      end = thisfbx.indexOf("\n", begin);
+      var parentName = thisfbx.substring(begin, end);
   
-      begin = this.fbx.indexOf(",", end) + 1;
-      end = this.fbx.indexOf(",", begin);
-      var childId = this.fbx.substring(begin, end);
+      begin = thisfbx.indexOf(",", end) + 1;
+      end = thisfbx.indexOf(",", begin);
+      var childId = thisfbx.substring(begin, end);
   
       begin = end + 1;
-      end = this.fbx.indexOf("\n", begin);
-      var parentId = this.fbx.substring(begin, end);
+      end = thisfbx.indexOf("\n", begin);
+      var parentId = thisfbx.substring(begin, end);
     }
     for (var v = 0; v < geometryNumber; ++v) {
       var geometry = [];
-      begin = this.fbx.indexOf(";Geometry", end) + 1;
-      end = this.fbx.indexOf(",", begin);
-      geometry.push(this.fbx.substring(begin, end));
+      begin = thisfbx.indexOf(";Geometry", end) + 1;
+      end = thisfbx.indexOf(",", begin);
+      geometry.push(thisfbx.substring(begin, end));
   
-      begin = this.fbx.indexOf("Model", end);
-      end = this.fbx.indexOf("\n", begin);
-      geometry.push(this.fbx.substring(begin, end));
+      begin = thisfbx.indexOf("Model", end);
+      end = thisfbx.indexOf("\n", begin);
+      geometry.push(thisfbx.substring(begin, end));
   
-      begin = this.fbx.indexOf(",", end) + 1;
-      end = this.fbx.indexOf(",", begin);
-      geometry.push(this.fbx.substring(begin, end));
+      begin = thisfbx.indexOf(",", end) + 1;
+      end = thisfbx.indexOf(",", begin);
+      geometry.push(thisfbx.substring(begin, end));
   
       begin = end + 1;
-      end = this.fbx.indexOf("\n", begin);
-      geometry.push(this.fbx.substring(begin, end));
+      end = thisfbx.indexOf("\n", begin);
+      geometry.push(thisfbx.substring(begin, end));
 
 
       while (
-          (this.fbx.indexOf(";Material", end) != -1 &&
-           this.fbx.indexOf(";Material", end) < this.fbx.indexOf(";Geometry", end) ) ||
-          (this.fbx.indexOf(";Geometry", end) == -1 && this.fbx.indexOf(";Material", end) != -1)
+          (thisfbx.indexOf(";Material", end) != -1 &&
+           thisfbx.indexOf(";Material", end) < thisfbx.indexOf(";Geometry", end) ) ||
+          (thisfbx.indexOf(";Geometry", end) == -1 && thisfbx.indexOf(";Material", end) != -1)
       ) {
         var cMaterial = [];
-        begin = this.fbx.indexOf(";Material", end) + 1;
-        end = this.fbx.indexOf(",", begin);
-        cMaterial.push(this.fbx.substring(begin, end));
+        begin = thisfbx.indexOf(";Material", end) + 1;
+        end = thisfbx.indexOf(",", begin);
+        cMaterial.push(thisfbx.substring(begin, end));
     
-        begin = this.fbx.indexOf("Model", end);
-        end = this.fbx.indexOf("\n", begin);
-        cMaterial.push(this.fbx.substring(begin, end));
+        begin = thisfbx.indexOf("Model", end);
+        end = thisfbx.indexOf("\n", begin);
+        cMaterial.push(thisfbx.substring(begin, end));
     
-        begin = this.fbx.indexOf(",", end) + 1;
-        end = this.fbx.indexOf(",", begin);
-        cMaterial.push(this.fbx.substring(begin, end));
+        begin = thisfbx.indexOf(",", end) + 1;
+        end = thisfbx.indexOf(",", begin);
+        cMaterial.push(thisfbx.substring(begin, end));
     
         begin = end + 1;
-        end = this.fbx.indexOf("\n", begin);
-        cMaterial.push(this.fbx.substring(begin, end));
+        end = thisfbx.indexOf("\n", begin);
+        cMaterial.push(thisfbx.substring(begin, end));
         geometry.push(cMaterial);
       }
       connectionGeometry.push(geometry);
@@ -137,30 +138,32 @@ class FBX_Parser {
     this.vertexContainer0 = [];
     this.indexContainerTriangle0 = [];
     this.materialsContainer0 = [];
-    begin = this.fbx.indexOf("Objects:", 0);
+    this.normalContainer0 = [];
+    begin = thisfbx.indexOf("Objects:", 0);
     for (var u = 0; u < geometryNumber; ++u) {
-      begin = this.fbx.indexOf("Geometry:", begin) + 10;
-      end = this.fbx.indexOf(",", begin);
-      geometryIdContainer.push(this.fbx.substring(begin, end));
+      begin = thisfbx.indexOf("Geometry:", begin) + 10;
+      end = thisfbx.indexOf(",", begin);
+      geometryIdContainer.push(thisfbx.substring(begin, end));
   
-      end = this.fbx.indexOf("Vertices", end);
-      begin = this.fbx.indexOf("*", end) + 1;
-      end = this.fbx.indexOf(" ", begin);
+      end = thisfbx.indexOf("Vertices", end);
+
+      begin = thisfbx.indexOf("*", end) + 1;
+      end = thisfbx.indexOf(" ", begin);
      //バーテックスの数
-      var VertexNumber0 = this.fbx.substring(begin, end);
+      var VertexNumber0 = thisfbx.substring(begin, end);
         
-      end = this.fbx.indexOf("{", end);
-      begin = this.fbx.indexOf(":", end) + 2;
+      end = thisfbx.indexOf("{", end);
+      begin = thisfbx.indexOf(":", end) + 2;
       this.vertex0 = [];
       for (var v = 0; v < VertexNumber0 / 3; ++v) {
         var vertex = [];
         for (var w = 0; w < 3; ++w) {
           if (v * 3 + w == VertexNumber0 - 1) {
-            end = this.fbx.indexOf("\n", begin);
+            end = thisfbx.indexOf("\n", begin);
           } else {
-            end = this.fbx.indexOf(",", begin);
+            end = thisfbx.indexOf(",", begin);
           }
-          var token = this.fbx.substring(begin, end);
+          var token = thisfbx.substring(begin, end);
           vertex.push(token);      
           if (w == 2) {
             this.vertex0.push(vertex);
@@ -172,25 +175,25 @@ class FBX_Parser {
       //#################
       // 頂点のインデックス
       //#################
-      end = this.fbx.indexOf("PolygonVertexIndex", end);
-      begin = this.fbx.indexOf("*", end) + 1;
-      end = this.fbx.indexOf(" ", begin);
+      end = thisfbx.indexOf("PolygonVertexIndex", end);
+      begin = thisfbx.indexOf("*", end) + 1;
+      end = thisfbx.indexOf(" ", begin);
       //インデックスの数
-      var VertexIndexNumber = this.fbx.substring(begin, end);
+      var VertexIndexNumber = thisfbx.substring(begin, end);
       
-      end = this.fbx.indexOf("{", end);
-      begin = this.fbx.indexOf(":", end) + 2;
+      end = thisfbx.indexOf("{", end);
+      begin = thisfbx.indexOf(":", end) + 2;
       
       this.index0 = [];
       var newLine = false;
       var index = [];
       for (var v = 0; v < VertexIndexNumber; ++v) {
         if (v == VertexIndexNumber - 1) {
-          end = this.fbx.indexOf("\n", begin);
+          end = thisfbx.indexOf("\n", begin);
         } else {
-          end = this.fbx.indexOf(",", begin);
+          end = thisfbx.indexOf(",", begin);
         }
-        var token = this.fbx.substring(begin, end);
+        var token = thisfbx.substring(begin, end);
         if (newLine) {
           var num = token.substring(1);
           num -= 1;
@@ -212,7 +215,7 @@ class FBX_Parser {
         }
           
         //ポリゴンの頂点の末端の "-" を検知
-        if (this.fbx.substring(end + 1, end + 2) == "-") {
+        if (thisfbx.substring(end + 1, end + 2) == "-") {
           newLine = true;
         }
         begin = end + 1;
@@ -227,24 +230,55 @@ class FBX_Parser {
       this.indexContainerTriangle0.push(triangle0);
     
       //#####
+      // Normals
+      //#####
+      end = thisfbx.indexOf("Normals:", end);
+      begin = thisfbx.indexOf("*", end) + 1;
+      end = thisfbx.indexOf(" ", begin);
+      //インデックスの数
+      var NormalNumber = thisfbx.substring(begin, end);
+   //   document.body.innerHTML += NormalNumber + "<br>";
+
+      end = thisfbx.indexOf("{", end);
+      begin = thisfbx.indexOf(":", end) + 2;
+      this.normal0 = [];
+      for (var v = 0; v < NormalNumber / 3; ++v) {
+        var normal = [];
+        for (var w = 0; w < 3; ++w) {
+          if (v * 3 + w == NormalNumber - 1) {
+            end = thisfbx.indexOf("\n", begin);
+          } else {
+            end = thisfbx.indexOf(",", begin);
+          }
+          var token = thisfbx.substring(begin, end);
+         //   document.body.innerHTML += token + "<br>";
+          normal.push(token);      
+          if (w == 2) {
+            this.normal0.push(normal);
+          }
+          begin = end + 1;
+        }
+      }
+      this.normalContainer0.push(this.normal0);
+      //#####
       // Materials
       //#####
-      end = this.fbx.indexOf("Materials:", end);
-      begin = this.fbx.indexOf("*", end) + 1;
-      end = this.fbx.indexOf(" ", begin);
-      var materialNumber0 = this.fbx.substring(begin, end);
-//      document.body.innerHTML += "<br>" + this.fbx.substring(begin, end) + "<br>";
-      end = this.fbx.indexOf("{", end);
-      begin = this.fbx.indexOf(":", end) + 2;
+      end = thisfbx.indexOf("Materials:", end);
+      begin = thisfbx.indexOf("*", end) + 1;
+      end = thisfbx.indexOf(" ", begin);
+      var materialNumber0 = thisfbx.substring(begin, end);
+//      document.body.innerHTML += "<br>" + thisfbx.substring(begin, end) + "<br>";
+      end = thisfbx.indexOf("{", end);
+      begin = thisfbx.indexOf(":", end) + 2;
 
       var materials = [];
       for (var v = 0; v < materialNumber0; ++v) {
         if (v == materialNumber0 - 1) {
-          end = this.fbx.indexOf("\n", begin);
+          end = thisfbx.indexOf("\n", begin);
         } else {
-          end = this.fbx.indexOf(",", begin);
+          end = thisfbx.indexOf(",", begin);
         }
-        materials.push(this.fbx.substring(begin, end));
+        materials.push(thisfbx.substring(begin, end));
         begin = end + 1;
       }
       this.materialsContainer0.push(materials);
@@ -257,15 +291,15 @@ class FBX_Parser {
     var modelContainer = [];
     for (var v = 0; v < modelNumber; ++v) {
       var modelArray = [];
-      begin = this.fbx.indexOf("Model:", end) + 7;
-      end = this.fbx.indexOf(",", begin);
-      modelArray.push(this.fbx.substring(begin, end));
-      begin = this.fbx.indexOf("Model::", end);
-      end = this.fbx.indexOf(",", begin);
-      modelArray.push(this.fbx.substring(begin, end));
-      begin = this.fbx.indexOf("{", end);
-      end = this.fbx.indexOf("}", begin);
-      var scope = this.fbx.substring(begin, end);
+      begin = thisfbx.indexOf("Model:", end) + 7;
+      end = thisfbx.indexOf(",", begin);
+      modelArray.push(thisfbx.substring(begin, end));
+      begin = thisfbx.indexOf("Model::", end);
+      end = thisfbx.indexOf(",", begin);
+      modelArray.push(thisfbx.substring(begin, end));
+      begin = thisfbx.indexOf("{", end);
+      end = thisfbx.indexOf("}", begin);
+      var scope = thisfbx.substring(begin, end);
 
       var translationArray = [];
       var begin2 = scope.indexOf("Lcl Translation", 0);
@@ -332,26 +366,26 @@ class FBX_Parser {
     var materialContainer = [];
     for (var v = 0; v < materialNumber; ++v) {
       var materialArray = [];
-      begin = this.fbx.indexOf("Material:", end) + 10;
-      end = this.fbx.indexOf(",", begin);
-      materialArray.push(this.fbx.substring(begin, end));
+      begin = thisfbx.indexOf("Material:", end) + 10;
+      end = thisfbx.indexOf(",", begin);
+      materialArray.push(thisfbx.substring(begin, end));
 
-      begin = this.fbx.indexOf("Material::", end) + 10;
-      end = this.fbx.indexOf(",", begin) - 1;
-      materialArray.push(this.fbx.substring(begin, end));
+      begin = thisfbx.indexOf("Material::", end) + 10;
+      end = thisfbx.indexOf(",", begin) - 1;
+      materialArray.push(thisfbx.substring(begin, end));
 
-      begin = this.fbx.indexOf("DiffuseColor", end);
-      begin = this.fbx.indexOf("A", begin) + 3;
-      end = this.fbx.indexOf(",", begin);
-      materialArray.push(this.fbx.substring(begin, end));
+      begin = thisfbx.indexOf("DiffuseColor", end);
+      begin = thisfbx.indexOf("A", begin) + 3;
+      end = thisfbx.indexOf(",", begin);
+      materialArray.push(thisfbx.substring(begin, end));
 
       begin = end + 1;
-      end = this.fbx.indexOf(",", begin);
-      materialArray.push(this.fbx.substring(begin, end));
+      end = thisfbx.indexOf(",", begin);
+      materialArray.push(thisfbx.substring(begin, end));
  
       begin = end + 1;
-      end = this.fbx.indexOf("\n", begin);
-      materialArray.push(this.fbx.substring(begin, end));
+      end = thisfbx.indexOf("\n", begin);
+      materialArray.push(thisfbx.substring(begin, end));
       
       materialContainer.push(materialArray);
     }
@@ -439,12 +473,55 @@ class FBX_Parser {
           
       }
     }
+   
+    this.indexContainer2 = [];
+    this.colorContainer = [];
+    for (var u = 0; u < geometryNumber; ++u) {
+      var indices = [];
+      for (var v = 0; v < this.indexContainer1[u].length; ++v) {
+        for (var w = 0; w < 3; ++w) {
+          indices.push(this.indexContainer1[u][v][w]);
+        }
+      }
+      this.indexContainer2.push(indices);
+        
+        
+      this.colors = [];
+      for (var v = 0; v < this.vertexContainer1[u].length; ++v) {
+        this.colors.push(new GLBoost.Vector4(0, 0, 0, 1.0));
+      }
+      for (var v = 0; v < this.indexContainer1[u].length; ++v) {
+        if ( this.materialsContainer0[u][v] == 0) {
+          for (var w = 0; w < 3; ++w) {
+            this.colors[this.indexContainer1[u][v][w]] = new GLBoost.Vector4(this.materialContainer1[u][2], this.materialContainer1[u][3], this.materialContainer1[u][4], 1.0);
+          }
+        }
+      }
+      for (var v = 0; v < this.indexContainer1[u].length; ++v) {
+        if ( this.materialsContainer0[u][v] == 1) {
+          for (var w = 0; w < 3; ++w) {
+            this.colors[this.indexContainer1[u][v][w]] = new GLBoost.Vector4(this.materialContainer1[u][5], this.materialContainer1[u][6], this.materialContainer1[u][7], 1.0);
+          }
+        }
+      }
+      for (var v = 0; v < this.indexContainer1[u].length; ++v) {
+        if ( this.materialsContainer0[u][v] == 2) {
+          for (var w = 0; w < 3; ++w) {
+            this.colors[this.indexContainer1[u][v][w]] = new GLBoost.Vector4(this.materialContainer1[u][8], this.materialContainer1[u][9], this.materialContainer1[u][10], 1.0);
+          }
+        }
+      }
+      this.colorContainer.push(this.colors);
+    }
   }
-  getVertx() {
+  getColors() {
+    return this.colorContainer;
+  }
+  getVertex() {
     return this.vertexContainer1;
   }
   getIndexTriangle() {
-    return this.indexContainer1;
+    return this.indexContainer2;
   }
   getModelSRT() {
     return this.modelContainer1;
@@ -455,8 +532,11 @@ class FBX_Parser {
   getMaterials() {
     return this.materialsContainer0;
   }
+  getNormals() {
+    return this.normalContainer0;
+  }
   showFBX() {
-    console.log(this.fbx);
-    document.body.innerHTML = this.fbx;
+    console.log(thisfbx);
+    document.body.innerHTML = thisfbx;
   }
 };

@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>作成</title>
+    <title>GLBoostTest</title>
     <script src="src/main.js"></script>
     <script src="lib/glboost.js"></script>
     <script src="src/FBX_Parser.js"></script>
@@ -9,16 +9,9 @@
   </head>
   <body>
     <script>
-      function onFulfilled(response) {
-        var fbx = new FBX_Parser(response);
-        fbx.parseFBX();
+      window.onload = function() {
         var main = new Main();
-        main.draw(fbx.getVertx(), fbx.getIndexTriangle(), fbx.getModelSRT(), fbx.getMaterial(), fbx.getMaterials());
-      
       }
-      function onRejected(error)     { elem.textContent = error    }
-      
-      ajax('resource/all_triangle.fbx').then(onFulfilled, onRejected);
     </script>
     <canvas id="world" width="600" height="600"></canvas><br>
   </body>
