@@ -139,6 +139,7 @@ class FBX_Parser {
     this.materialsContainer0 = [];
     this.normalContainer0 = [];
     begin = this.fbx.indexOf("Objects:", 0);
+      
     for (var u = 0; u < geometryNumber; ++u) {
       begin = this.fbx.indexOf("Geometry:", begin) + 10;
       end = this.fbx.indexOf(",", begin);
@@ -186,6 +187,7 @@ class FBX_Parser {
       this.index0 = [];
       var newLine = false;
       var index = [];
+      var token0 = "";
       for (var v = 0; v < VertexIndexNumber; ++v) {
         if (v == VertexIndexNumber - 1) {
           end = this.fbx.indexOf("\n", begin);
@@ -214,9 +216,24 @@ class FBX_Parser {
         }
           
         //ポリゴンの頂点の末端の "-" を検知
-        if (this.fbx.substring(end + 1, end + 2) == "-") {
-          newLine = true;
+//        if (this.fbx.substring(end + 1, end + 2) == "-") {
+//          newLine = true;
+//        }
+          
+        var posEnd;
+        if (v == VertexIndexNumber - 1) {
+          posEnd = this.fbx.indexOf("\n", end + 1);
+        } else {
+          posEnd = this.fbx.indexOf(",", end + 1);
         }
+          
+        token0 = this.fbx.substring(end + 1, posEnd);
+        var pos = token0.indexOf("-", 0);
+        if (token0.substring(pos, pos + 1) == "-") {
+          newLine = true;
+          end += pos;
+        }
+          
         begin = end + 1;
       }//for(var v = 0)
       
@@ -227,7 +244,6 @@ class FBX_Parser {
         }
       }      
       this.indexContainerTriangle0.push(triangle0);
-    
       //#####
       // Normals
       //#####
@@ -236,7 +252,6 @@ class FBX_Parser {
       end = this.fbx.indexOf(" ", begin);
       //インデックスの数
       var NormalNumber = this.fbx.substring(begin, end);
-   //   document.body.innerHTML += NormalNumber + "<br>";
 
       end = this.fbx.indexOf("{", end);
       begin = this.fbx.indexOf(":", end) + 2;
@@ -250,7 +265,6 @@ class FBX_Parser {
             end = this.fbx.indexOf(",", begin);
           }
           var token = this.fbx.substring(begin, end);
-         //   document.body.innerHTML += token + "<br>";
           normal.push(token);      
           if (w == 2) {
             this.normal0.push(normal);
@@ -266,7 +280,6 @@ class FBX_Parser {
       begin = this.fbx.indexOf("*", end) + 1;
       end = this.fbx.indexOf(" ", begin);
       var materialNumber0 = this.fbx.substring(begin, end);
-//      document.body.innerHTML += "<br>" + this.fbx.substring(begin, end) + "<br>";
       end = this.fbx.indexOf("{", end);
       begin = this.fbx.indexOf(":", end) + 2;
 
@@ -281,7 +294,6 @@ class FBX_Parser {
         begin = end + 1;
       }
       this.materialsContainer0.push(materials);
-//      document.body.innerHTML += "<br>" + this.materialsContainer0 + "<br>";
         
     }
     //#####
@@ -393,17 +405,22 @@ class FBX_Parser {
     this.indexContainer1 = [];
     this.modelContainer1 = [];
     this.materialContainer1 = [];
+      for (var w = 0; w < geometryNumber; ++w) {
+          this.vertexContainer1.push(this.vertexContainer0[w]);
+          this.indexContainer1.push(this.indexContainerTriangle0[w]);
+          this.modelContainer1.push(modelContainer[w + 1]);
+      }
     for (var v = 0; v < connectionGeometry.length; ++v) {
       for (var w = 0; w < geometryIdContainer.length; ++w) {
         if (connectionGeometry[v][2] == geometryIdContainer[w]) {
-          this.vertexContainer1.push(this.vertexContainer0[w]);
-          this.indexContainer1.push(this.indexContainerTriangle0[w]);
+//          this.vertexContainer1.push(this.vertexContainer0[w]);
+//          this.indexContainer1.push(this.indexContainerTriangle0[w]);
           break;
         }
       }
       for (var w = 0; w < modelContainer.length; ++w) {
         if (connectionGeometry[v][3] == modelContainer[w][0]) {
-          this.modelContainer1.push(modelContainer[w]);
+//          this.modelContainer1.push(modelContainer[w]);
           break;
         }
       }
@@ -472,7 +489,6 @@ class FBX_Parser {
           
       }
     }
-   
     this.indexContainer2 = [];
     this.colorContainer = [];
     for (var u = 0; u < geometryNumber; ++u) {
