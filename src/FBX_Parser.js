@@ -199,27 +199,18 @@ class FBX_Parser {
           var num = token.substring(1);
           num -= 1;
           token = num;
+          token = Number(token);
           index.push(token);
           
-//          var adjustIndex = [];
-//          for (var w = 0; w < index.length - 2; ++w) {
-//            adjustIndex.push(index[w]);
-//          }
-//          adjustIndex.push(index[index.length - 1]);
-//          adjustIndex.push(index[index.length - 2]);
-//          this.index0.push(adjustIndex);
-           this.index0.push(index);
+          this.index0.push(index);
           index = [];
           newLine = false;
         } else {
+          token = Number(token);
           index.push(token);
         }
           
         //ポリゴンの頂点の末端の "-" を検知
-//        if (this.fbx.substring(end + 1, end + 2) == "-") {
-//          newLine = true;
-//        }
-          
         var posEnd;
         if (v == VertexIndexNumber - 1) {
           posEnd = this.fbx.indexOf("\n", end + 1);
@@ -405,25 +396,13 @@ class FBX_Parser {
     this.indexContainer1 = [];
     this.modelContainer1 = [];
     this.materialContainer1 = [];
-      for (var w = 0; w < geometryNumber; ++w) {
-          this.vertexContainer1.push(this.vertexContainer0[w]);
-          this.indexContainer1.push(this.indexContainerTriangle0[w]);
-          this.modelContainer1.push(modelContainer[w + 1]);
-      }
+    for (var w = 0; w < geometryNumber; ++w) {
+      this.vertexContainer1.push(this.vertexContainer0[w]);
+      this.indexContainer1.push(this.indexContainerTriangle0[w]);
+      this.modelContainer1.push(modelContainer[w + 1]);
+    }
     for (var v = 0; v < connectionGeometry.length; ++v) {
-      for (var w = 0; w < geometryIdContainer.length; ++w) {
-        if (connectionGeometry[v][2] == geometryIdContainer[w]) {
-//          this.vertexContainer1.push(this.vertexContainer0[w]);
-//          this.indexContainer1.push(this.indexContainerTriangle0[w]);
-          break;
-        }
-      }
-      for (var w = 0; w < modelContainer.length; ++w) {
-        if (connectionGeometry[v][3] == modelContainer[w][0]) {
-//          this.modelContainer1.push(modelContainer[w]);
-          break;
-        }
-      }
+ 
       for (var w = 0; w < materialContainer.length; ++w) {
         var temp = [];
         var breakFlag = false;
@@ -499,44 +478,52 @@ class FBX_Parser {
         }
       }
       this.indexContainer2.push(indices);
-        
-        
-      this.colors = [];
-      for (var v = 0; v < this.vertexContainer1[u].length; ++v) {
-        this.colors.push(new GLBoost.Vector4(0, 0, 0, 1.0));
-      }
-      for (var v = 0; v < this.indexContainer1[u].length; ++v) {
-        if ( this.materialsContainer0[u][v] == 0) {
-          for (var w = 0; w < 3; ++w) {
-            this.colors[this.indexContainer1[u][v][w]] = new GLBoost.Vector4(this.materialContainer1[u][2], this.materialContainer1[u][3], this.materialContainer1[u][4], 1.0);
-          }
+    }
+    
+    this.vertexContainer2 = [];
+    this.materialContainer2 = [];
+    this.colorContainer2 = [];
+    for (var u = 0; u < geometryNumber; ++u) {
+      var indexedVertex = [];
+      var mm = [];
+      for (var v = 0; v < this.indexContainer2[u].length; ++v) {
+        var vv = [];
+        vv.push(this.vertexContainer1[u][this.indexContainer2[u][v]][0]);
+        vv.push(this.vertexContainer1[u][this.indexContainer2[u][v]][1]);
+        vv.push(this.vertexContainer1[u][this.indexContainer2[u][v]][2]);
+        indexedVertex.push(vv);
+        if (this.materialsContainer0[u][this.indexContainer2[u][v]] == 0) {
+          mm.push(new GLBoost.Vector4(this.materialContainer1[u][2], this.materialContainer1[u][3], this.materialContainer1[u][4], 1.0));
+        }
+        else if (this.materialsContainer0[u][this.indexContainer2[u][v]] == 1) {
+          mm.push(new GLBoost.Vector4(this.materialContainer1[u][5], this.materialContainer1[u][6], this.materialContainer1[u][7], 1.0));
+        }
+        else if (this.materialsContainer0[u][this.indexContainer2[u][v]] == 2) {
+          mm.push(new GLBoost.Vector4(this.materialContainer1[u][8], this.materialContainer1[u][9], this.materialContainer1[u][10], 1.0));
         }
       }
-      for (var v = 0; v < this.indexContainer1[u].length; ++v) {
-        if ( this.materialsContainer0[u][v] == 1) {
-          for (var w = 0; w < 3; ++w) {
-            this.colors[this.indexContainer1[u][v][w]] = new GLBoost.Vector4(this.materialContainer1[u][5], this.materialContainer1[u][6], this.materialContainer1[u][7], 1.0);
-          }
-        }
+      this.vertexContainer2.push(indexedVertex);
+      this.colorContainer2.push(mm);
+    }
+      
+    this.indexContainer3 = [];
+    for (var u = 0; u < geometryNumber; ++u) {
+      var vArray = [];
+      for (var v = 0; v < this.indexContainer2[u].length; ++v) {
+        var wArray = [];
+        vArray.push(v);
       }
-      for (var v = 0; v < this.indexContainer1[u].length; ++v) {
-        if ( this.materialsContainer0[u][v] == 2) {
-          for (var w = 0; w < 3; ++w) {
-            this.colors[this.indexContainer1[u][v][w]] = new GLBoost.Vector4(this.materialContainer1[u][8], this.materialContainer1[u][9], this.materialContainer1[u][10], 1.0);
-          }
-        }
-      }
-      this.colorContainer.push(this.colors);
+      this.indexContainer3.push(vArray);
     }
   }
   getColors() {
-    return this.colorContainer;
+    return this.colorContainer2;
   }
   getVertex() {
-    return this.vertexContainer1;
+    return this.vertexContainer2;
   }
   getIndexTriangle() {
-    return this.indexContainer2;
+    return this.indexContainer3;
   }
   getModelSRT() {
     return this.modelContainer1;

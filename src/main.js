@@ -1,6 +1,6 @@
 class Main {
   constructor() {
-    ajax('resource/all_triangle.fbx').then(this.onFulfilled, this.onRejected);
+    ajax('resource/all_triangle2.fbx').then(this.onFulfilled, this.onRejected);
   }
   onFulfilled(response) {
     var renderer = new Renderer();
@@ -34,24 +34,39 @@ class Renderer {
     var renderer = glBoostContext.createRenderer({ clearColor: {red:0.5, green:0.5, blue:0.5, alpha:1}});
 
     var scene = glBoostContext.createScene();
-      
+
+    var texcoords = [];
+    for (var v = 0; v < 2000; ++v) {
+      texcoords.push(new GLBoost.Vector2(0.0, 1.0));
+      texcoords.push(new GLBoost.Vector2(1.0, 1.0));
+      texcoords.push(new GLBoost.Vector2(0.0, 0.0));
+    }
     //三角ポリゴン描画
     for (var u = 0; u < indexTriangle.length; ++u) {
 
       var geometry = glBoostContext.createGeometry();
       geometry.setVerticesData({
         position: vertex[u],
-        color: colors[u]
+        color: colors[u],
+        normal: normals[u],
+        texcoord: texcoords
 
       }, [indexTriangle[u]], GLBoost.TRIANGLES, GLBoost.DYNAMIC_DRAW);
 
       var material = glBoostContext.createClassicMaterial();
+      material.shaderClass = GLBoost.LambertShader;
+      var texture = glBoostContext.createTexture('resource/texture.png');
+      material.setTexture(texture);
       var mesh = glBoostContext.createMesh(geometry, material);
       mesh.translate = new GLBoost.Vector3(modelSRT[u][2][0], modelSRT[u][2][1], modelSRT[u][2][2]);
       mesh.rotate    = new GLBoost.Vector3(modelSRT[u][3][0], modelSRT[u][3][1], modelSRT[u][3][2]);
       mesh.scale     = new GLBoost.Vector3(modelSRT[u][4][0], modelSRT[u][4][1], modelSRT[u][4][2]);
       scene.addChild(mesh);
     }
+    var directionalLight = glBoostContext.createDirectionalLight(new GLBoost.Vector3(2.5,2.5,2.5), new GLBoost.Vector3(-500, -500, -1000));
+    var directionalLight2 = glBoostContext.createDirectionalLight(new GLBoost.Vector3(2.5,2.5,2.5), new GLBoost.Vector3(-500, -500, 1000));
+    scene.addChild( directionalLight );
+    scene.addChild( directionalLight2 );
 
     var camera = glBoostContext.createPerspectiveCamera(
         {
@@ -63,7 +78,7 @@ class Renderer {
           fovy: 45.0,
           aspect: 1.0,
           zNear: 0.1,
-          zFar: 1000.0
+          zFar: 3000.0
         }
     );
     scene.addChild( camera );
