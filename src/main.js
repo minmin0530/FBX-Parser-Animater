@@ -1,6 +1,6 @@
 class Main {
   constructor() {
-    ajax('resource/all_triangle2.fbx').then(this.onFulfilled, this.onRejected);
+    ajax('resource/cube3.fbx').then(this.onFulfilled, this.onRejected);
   }
   onFulfilled(response) {
     var renderer = new Renderer();
@@ -18,6 +18,7 @@ class Renderer {
     var indexTriangle = fbx.getIndexTriangle();
     var modelSRT      = fbx.getModelSRT();
     var normals       = fbx.getNormals();
+    var uv            = fbx.getUVs();
     var arg = new Object;
     var pair = location.search.substring(1).split('&');
     for(var i = 0; pair[i] ; i++) {
@@ -36,7 +37,7 @@ class Renderer {
     var scene = glBoostContext.createScene();
 
     var texcoords = [];
-    for (var v = 0; v < 2000; ++v) {
+    for (var v = 0; v < 36; ++v) {
       texcoords.push(new GLBoost.Vector2(0.0, 1.0));
       texcoords.push(new GLBoost.Vector2(1.0, 1.0));
       texcoords.push(new GLBoost.Vector2(0.0, 0.0));
@@ -47,9 +48,9 @@ class Renderer {
       var geometry = glBoostContext.createGeometry();
       geometry.setVerticesData({
         position: vertex[u],
-        color: colors[u],
+//        color: colors[u],
         normal: normals[u],
-        texcoord: texcoords
+        texcoord: uv[u]
 
       }, [indexTriangle[u]], GLBoost.TRIANGLES, GLBoost.DYNAMIC_DRAW);
 
@@ -63,8 +64,8 @@ class Renderer {
       mesh.scale     = new GLBoost.Vector3(modelSRT[u][4][0], modelSRT[u][4][1], modelSRT[u][4][2]);
       scene.addChild(mesh);
     }
-    var directionalLight = glBoostContext.createDirectionalLight(new GLBoost.Vector3(2.5,2.5,2.5), new GLBoost.Vector3(-500, -500, -1000));
-    var directionalLight2 = glBoostContext.createDirectionalLight(new GLBoost.Vector3(2.5,2.5,2.5), new GLBoost.Vector3(-500, -500, 1000));
+    var directionalLight = glBoostContext.createDirectionalLight(new GLBoost.Vector3(3.0, 3.0, 3.0), new GLBoost.Vector3(-500, -500, -500));
+    var directionalLight2 = glBoostContext.createDirectionalLight(new GLBoost.Vector3(3.0, 3.0, 3.0), new GLBoost.Vector3(500, 500, 500));
     scene.addChild( directionalLight );
     scene.addChild( directionalLight2 );
 

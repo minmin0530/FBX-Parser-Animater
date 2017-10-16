@@ -138,6 +138,8 @@ class FBX_Parser {
     this.indexContainerTriangle0 = [];
     this.materialsContainer0 = [];
     this.normalContainer0 = [];
+    this.uvContainer0 = [];
+    this.uvIndexContainer0 = [];
     begin = this.fbx.indexOf("Objects:", 0);
       
     for (var u = 0; u < geometryNumber; ++u) {
@@ -264,6 +266,60 @@ class FBX_Parser {
         }
       }
       this.normalContainer0.push(this.normal0);
+    
+      //#####
+      // UV
+      //#####
+      end = this.fbx.indexOf("UV:", end);
+      begin = this.fbx.indexOf("*", end) + 1;
+      end = this.fbx.indexOf(" ", begin);
+      //インデックスの数
+      var UVNumber = this.fbx.substring(begin, end);
+
+      end = this.fbx.indexOf("{", end);
+      begin = this.fbx.indexOf(":", end) + 2;
+      this.uv0 = [];
+      for (var v = 0; v < UVNumber / 2; ++v) {
+        var uv = [];
+        for (var w = 0; w < 2; ++w) {
+          if (v * 2 + w == UVNumber - 1) {
+            end = this.fbx.indexOf("\n", begin);
+          } else {
+            end = this.fbx.indexOf(",", begin);
+          }
+          var token = this.fbx.substring(begin, end);
+          uv.push(token);      
+          if (w == 1) {
+            this.uv0.push(uv);
+          }
+          begin = end + 1;
+        }
+      }
+      this.uvContainer0.push(this.uv0);
+      //#####
+      // UVIndex
+      //#####
+      end = this.fbx.indexOf("UVIndex:", end);
+      begin = this.fbx.indexOf("*", end) + 1;
+      end = this.fbx.indexOf(" ", begin);
+      //インデックスの数
+      var UVIndexNumber = this.fbx.substring(begin, end);
+
+      end = this.fbx.indexOf("{", end);
+      begin = this.fbx.indexOf(":", end) + 2;
+      this.uvindex0 = [];
+      for (var v = 0; v < UVIndexNumber; ++v) {
+          if (v == UVIndexNumber - 1) {
+            end = this.fbx.indexOf("\n", begin);
+          } else {
+            end = this.fbx.indexOf(",", begin);
+          }
+          var token = this.fbx.substring(begin, end);
+          this.uvindex0.push(token);      
+          begin = end + 1;
+        
+      }
+      this.uvIndexContainer0.push(this.uvindex0);
       //#####
       // Materials
       //#####
@@ -505,7 +561,19 @@ class FBX_Parser {
       this.vertexContainer2.push(indexedVertex);
       this.colorContainer2.push(mm);
     }
-      
+
+    this.uvContainer1 = [];
+    for (var u = 0; u < geometryNumber; ++u) {
+      var indexedUV = [];
+      for (var v = 0; v < this.uvIndexContainer0[u].length; ++v) {
+        var uv = [];
+        uv.push(this.uvContainer0[u][this.uvIndexContainer0[u][v]][0]);
+        uv.push(1.0 - this.uvContainer0[u][this.uvIndexContainer0[u][v]][1]);
+        indexedUV.push(uv);
+      }
+      this.uvContainer1.push(indexedUV);
+    }
+    
     this.indexContainer3 = [];
     for (var u = 0; u < geometryNumber; ++u) {
       var vArray = [];
@@ -536,6 +604,10 @@ class FBX_Parser {
   }
   getNormals() {
     return this.normalContainer0;
+  }
+  getUVs() {
+    document.body.innerHTML += this.uvContainer1[0][0];  
+    return this.uvContainer1;
   }
   showFBX() {
     console.log(this.fbx);
