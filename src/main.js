@@ -36,12 +36,6 @@ class Renderer {
 
     var scene = glBoostContext.createScene();
 
-    var texcoords = [];
-    for (var v = 0; v < 36; ++v) {
-      texcoords.push(new GLBoost.Vector2(0.0, 1.0));
-      texcoords.push(new GLBoost.Vector2(1.0, 1.0));
-      texcoords.push(new GLBoost.Vector2(0.0, 0.0));
-    }
     //三角ポリゴン描画
     for (var u = 0; u < indexTriangle.length; ++u) {
 
